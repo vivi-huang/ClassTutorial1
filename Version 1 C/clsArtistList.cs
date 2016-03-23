@@ -7,6 +7,7 @@ namespace Version_1_C
     [Serializable()] 
     public class clsArtistList : SortedList
     {
+        private const string _fileName = "gallery.xml";
         public void EditArtist(string prKey)
         {
             clsArtist lcArtist;
@@ -33,7 +34,44 @@ namespace Version_1_C
                 MessageBox.Show("Duplicate Key!");
             }
         }
-        
+
+        public void Save()
+        {
+            try
+            {
+                System.IO.FileStream lcFileStream = new System.IO.FileStream(_fileName, System.IO.FileMode.Create);
+                System.Runtime.Serialization.Formatters.Soap.SoapFormatter lcFormatter =
+                    new System.Runtime.Serialization.Formatters.Soap.SoapFormatter();
+
+                lcFormatter.Serialize(lcFileStream, this);
+                lcFileStream.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "File Save Error");
+            }
+        }
+
+        public void Retrieve()
+        {
+            try
+            {
+                System.IO.FileStream lcFileStream = new System.IO.FileStream(_fileName, System.IO.FileMode.Open);
+                System.Runtime.Serialization.Formatters.Soap.SoapFormatter lcFormatter =
+                    new System.Runtime.Serialization.Formatters.Soap.SoapFormatter();
+
+                theArtistList = (clsArtistList)lcFormatter.Deserialize(lcFileStream);
+                UpdateDisplay();
+                lcFileStream.Close();
+            }
+
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "File Retrieve Error");
+            }
+        }
+
+
         public decimal GetTotalValue()
         {
             decimal lcTotal = 0;
