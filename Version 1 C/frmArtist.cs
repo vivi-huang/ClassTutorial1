@@ -16,57 +16,58 @@ namespace Version_1_C
         }
 
         private clsArtistList theArtistList;
-        private clsWorksList theWorksList;
-        private byte sortOrder; // 0 = Name, 1 = Date
+        private clsWorksList _WorksList;
+        private byte _SortOrder; // 0 = Name, 1 = Date
+        private clsArtist _Arist; 
 
         private void UpdateDisplay()
         {
             txtName.Enabled = txtName.Text == "";
-            if (sortOrder == 0)
+            if (_SortOrder == 0)
             {
-                theWorksList.SortByName();
+                _WorksList.SortByName();
                 rbByName.Checked = true;
             }
             else
             {
-                theWorksList.SortByDate();
+                _WorksList.SortByDate();
                 rbByDate.Checked = true;
             }
 
             lstWorks.DataSource = null;
-            lstWorks.DataSource = theWorksList;
-            lblTotal.Text = Convert.ToString(theWorksList.GetTotalValue());
+            lstWorks.DataSource = _WorksList;
+            lblTotal.Text = Convert.ToString(_WorksList.GetTotalValue());
         }
 
-        public void SetDetails(string prName, string prSpeciality, string prPhone, byte prSortOrder,
+        public void SetDetails(string prName, string prSpeciality, string prPhone,
                                clsWorksList prWorksList, clsArtistList prArtistList)
         {
             txtName.Text = prName;
             txtSpeciality.Text = prSpeciality;
             txtPhone.Text = prPhone;
             theArtistList = prArtistList;
-            theWorksList = prWorksList;
-            sortOrder = prSortOrder;
+            _WorksList = prWorksList;
+            _SortOrder = _WorksList.SortOrder;
             UpdateDisplay();
         }
 
-        public void GetDetails(ref string prName, ref string prSpeciality, ref string prPhone, ref byte prSortOrder)
+        public void GetDetails(ref string prName, ref string prSpeciality, ref string prPhone)
         {
             prName = txtName.Text;
             prSpeciality = txtSpeciality.Text;
             prPhone = txtPhone.Text;
-            prSortOrder = sortOrder;
+            _SortOrder = _WorksList.SortOrder;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            theWorksList.DeleteWork(lstWorks.SelectedIndex);
+            _WorksList.DeleteWork(lstWorks.SelectedIndex);
             UpdateDisplay();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            theWorksList.AddWork();
+            _WorksList.AddWork();
             UpdateDisplay();
         }
 
@@ -83,7 +84,7 @@ namespace Version_1_C
             if (txtName.Enabled && txtName.Text != "")
                 if (theArtistList.Contains(txtName.Text))
                 {
-                    MessageBox.Show("Artist with that name already exists!");
+                    MessageBox.Show("Artist with that _Name already exists!");
                     return false;
                 }
                 else
@@ -97,14 +98,14 @@ namespace Version_1_C
             int lcIndex = lstWorks.SelectedIndex;
             if (lcIndex >= 0)
             {
-                theWorksList.EditWork(lcIndex);
+                _WorksList.EditWork(lcIndex);
                 UpdateDisplay();
             }
         }
 
         private void rbByDate_CheckedChanged(object sender, EventArgs e)
         {
-            sortOrder = Convert.ToByte(rbByDate.Checked);
+            _SortOrder = Convert.ToByte(rbByDate.Checked);
             UpdateDisplay();
         }
 

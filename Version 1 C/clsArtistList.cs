@@ -15,7 +15,7 @@ namespace Version_1_C
             if (lcArtist != null)
                 lcArtist.EditDetails();
             else
-                MessageBox.Show("Sorry no artist by this name");
+                MessageBox.Show("Sorry no artist by this _Name");
         }
        
         public void NewArtist()
@@ -52,23 +52,26 @@ namespace Version_1_C
             }
         }
 
-        public void Retrieve()
+        public static clsArtistList Retrieve()
         {
+            clsArtistList lcArtistList;
             try
             {
                 System.IO.FileStream lcFileStream = new System.IO.FileStream(_fileName, System.IO.FileMode.Open);
                 System.Runtime.Serialization.Formatters.Soap.SoapFormatter lcFormatter =
                     new System.Runtime.Serialization.Formatters.Soap.SoapFormatter();
 
-                theArtistList = (clsArtistList)lcFormatter.Deserialize(lcFileStream);
-                UpdateDisplay();
+                lcArtistList = (clsArtistList)lcFormatter.Deserialize(lcFileStream);
+                //UpdateDisplay();
                 lcFileStream.Close();
             }
 
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "File Retrieve Error");
+                lcArtistList = new clsArtistList();
             }
+            return lcArtistList;
         }
 
 
